@@ -1,40 +1,32 @@
 <?php
-
 try{
-$dsn = 'mysql:dbname=todoDB;host=localhost;charset=utf8';
-$user = 'root';
-$password = '';
+  $dsn = 'mysql:dbname=todoDB;host=localhost;charset=utf8';
+  $user = 'root';
+  $password = '';
 
-$dbh = new PDO($dsn, $user, $password);
-$dbh->query('SET NAMES utf8');
-$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-print('接続できてる');
-$db = NULL;
+  $dbh = new PDO($dsn, $user, $password);
+  $dbh->query('SET NAMES utf8');
+  $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+  print('接続できてる');
+  $db = NULL;
 }catch(PDOException $e){
   die('エラー');
 }
 
-
 if(isset($_GET['add'])){
-    $text = $_GET['memo'];
-    // $text = htmlspecialchars($text, ENT_QUOTES);
+  $text = $_GET['memo'];
+  $text = htmlspecialchars($text, ENT_QUOTES);
+  $sql = 'INSERT INTO ToDoList (text) VALUE(:text)';
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(':text', $text, PDO::PARAM_STR);
+  $stmt->execute();
 
-        $sql = 'INSERT INTO ToDoList (text) VALUE(:text)';
-        $stmt = $dbh->prepare($sql);
-        print("test1");
-        $stmt->bindValue(':text', $text, PDO::PARAM_STR);
+  $dbh = null;
 
-        $stmt->execute();
+  unset($text);
+}else if(isset($_GET['delete'])){
 
-        $dbh = null;
-
-        unset($text);
-    }else if(isset($_GET['delete'])){
-    }
-
-
-
-
+}
 ?>
 
 
@@ -46,9 +38,9 @@ if(isset($_GET['add'])){
 </head>
 <body>
   <div class="container">
-  <form action="" method="GET">
-  <input type="text"id="memo" name="memo" value="" />
-</div>
+    <form action="" method="GET">
+    <input type="text"id="memo" name="memo" value="" />
+  </div>
   <input type="submit" name="add" id="add" value="追加" />
 </form>
 <HR>
