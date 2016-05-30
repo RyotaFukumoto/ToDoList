@@ -11,17 +11,18 @@ $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 print('接続できてる');
 $db = NULL;
 }catch(PDOException $e){
-  die('エラー')
+  die('エラー');
 }
 
 
 if(isset($_GET['add'])){
     $text = $_GET['memo'];
-    $text = htmlspecialchars($text, ENT_QUOTES);
+    // $text = htmlspecialchars($text, ENT_QUOTES);
 
-        $sql = 'INSERT INTO ToDoList (text) VALUE($text)';
+        $sql = 'INSERT INTO ToDoList (text) VALUE(:text)';
         $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(1, $text, PDO::PARAM_STR);
+        print("test1");
+        $stmt->bindValue(':text', $text, PDO::PARAM_STR);
 
         $stmt->execute();
 
