@@ -20,12 +20,15 @@ if(isset($_GET['add'])){
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(':text', $text, PDO::PARAM_STR);
   $stmt->execute();
-
   $dbh = null;
 
   unset($text);
 }else if(isset($_GET['delete'])){
-
+  $num =$_GET['id'];
+  $sql 'delete from ToDoList WHERE id == :num';
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(':num',$num,PDO::PARM_STR);
+  $stmt->execute();
 }
 ?>
 
