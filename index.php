@@ -1,37 +1,38 @@
 <?php
 
-$errors = array();
+try{
+$dsn = 'mysql:dbname=todoDB;host=localhost;charset=utf8';
+$user = 'root';
+$password = '';
 
-if(isset($_POST['submit'])){
+$dbh = new PDO($dsn, $user, $password);
+$dbh->query('SET NAMES utf8');
+$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+print('接続できてる');
+$db = NULL;
+}catch(PDOException $e){
+  die('エラー')
+}
 
-    $memo = $_POST['memo'];
 
+if(isset($_GET['add'])){
+    $text = $_GET['memo'];
+    $text = htmlspecialchars($text, ENT_QUOTES);
 
-    $memo = htmlspecialchars($memo, ENT_QUOTES);
-
-    if(count($errors) === 0){
-
-        $dsn = 'mysql:dbname=todoDB;host=localhost;charset=utf8';
-        $user = 'root';
-        $password = '';
-
-        $dbh = new PDO($dsn, $user, $password);
-        $dbh->query('SET NAMES utf8');
-        $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-        $sql = 'INSERT INTO ToDoList ( memo) VALUES ( ?, 0)';
+        $sql = 'INSERT INTO ToDoList (text) VALUE($text)';
         $stmt = $dbh->prepare($sql);
-
-
-        $stmt->bindValue(1, $memo, PDO::PARAM_STR);
+        $stmt->bindValue(1, $text, PDO::PARAM_STR);
 
         $stmt->execute();
 
         $dbh = null;
 
-        unset($memo);
+        unset($text);
+    }else if(isset($_GET['delete'])){
     }
-}
+
+
+
 
 ?>
 
@@ -44,10 +45,10 @@ if(isset($_POST['submit'])){
 </head>
 <body>
   <div class="container">
-  <form action="" method="post">
+  <form action="" method="GET">
   <input type="text"id="memo" name="memo" value="" />
 </div>
-  <input type="submit" value="送信" />
+  <input type="submit" name="add" id="add" value="追加" />
 </form>
 <HR>
 
