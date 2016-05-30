@@ -40,8 +40,8 @@ if(isset($_GET['add'])){
   <div class="container">
     <form action="" method="GET">
     <input type="text"id="memo" name="memo" value="" />
+    <input type="submit" name="add" id="add" value="追加" />
   </div>
-  <input type="submit" name="add" id="add" value="追加" />
 </form>
 <HR>
 
