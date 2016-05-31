@@ -6,7 +6,6 @@
     $dbh = new PDO($dsn, $user, $password);
     $dbh->query('SET NAMES utf8');
     $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    print('接続できてます。');
     $db = NULL;
   }catch(PDOException $e){
     die('エラー');
@@ -14,9 +13,10 @@
   if(isset($_GET['add'])){
     $text = $_GET['memo'];
     $text = htmlspecialchars($text, ENT_QUOTES);
+    echo $text;
     if($text === ''){
-        $errors['text'] = '予定が入力されていません。';
-        print $errors["text"];
+        // $errors['text'] = '予定が入力されていません。';
+        // print $errors["text"];
     }else{
       $sql = 'INSERT INTO ToDoList (text) VALUE(:text)';
       $stmt = $dbh->prepare($sql);
@@ -41,13 +41,27 @@
     <meta charset="utf-8">
     <title>ToDoList</title>
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.css" rel="stylesheet">
+    <style type="text/css">
+      ul{padding-left: 30px;}
+      li{margin-bottom: 10px;}
+    </style>
   </head>
   <body>
     <div class="container">
-      <form action="" method="GET">
+      <form action="" method="GET" onsubmit="return check(this)">
         <input type="text"id="memo" name="memo" value="" />
         <input type="submit" name="add" id="add" value="追加" />
       </form>
+      <script type="text/javascript">
+        function check(frm){
+          if(frm.elements['memo'].value==""){
+            alert("予定が入力されていません。");
+            return false;
+          }else{
+            return true;
+          }
+        }
+      </script>
     </div>
     <hr>
     <?php
