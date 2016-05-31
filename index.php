@@ -32,8 +32,7 @@ if(isset($_GET['add'])){
   $stmt->execute();
   $dbh = null;
   unset($text);
-}
-}else if(isset($_GET['delete'])){
+}}else if(isset($_GET['delete'])){
   $num =$_GET['delete'];
   // $sql 'DELETE FROM ToDoList WHERE id = :num';
   $sql = 'DELETE FROM ToDoList WHERE id = :num';
