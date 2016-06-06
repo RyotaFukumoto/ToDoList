@@ -13,19 +13,13 @@
   if(isset($_GET['add'])){
     $text = $_GET['memo'];
     $text = htmlspecialchars($text, ENT_QUOTES);
-    // echo $text;
-    if($text === ''){
-        // $errors['text'] = '予定が入力されていません。';
-        // print $errors["text"];
-    }else{
-      $sql = 'INSERT INTO ToDoList (text) VALUE(:text)';
-      $stmt = $dbh->prepare($sql);
-      $stmt->bindValue(':text', $text, PDO::PARAM_STR);
-      $stmt->execute();
-      $dbh = null;
-      unset($text);
-      header( "Location: http://localhost/ToDoList/" );
-    }
+    $sql = 'INSERT INTO ToDoList (text) VALUE(:text)';
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':text', $text, PDO::PARAM_STR);
+    $stmt->execute();
+    $dbh = null;
+    unset($text);
+    header( "Location: http://localhost/ToDoList/" );
   }else if(isset($_GET['delete'])){
     $num =$_GET['delete'];
     $sql = 'DELETE FROM ToDoList WHERE id = :num';
@@ -45,6 +39,24 @@
       ul{padding-left: 30px;}
       li{margin-bottom: 10px;}
     </style>
+    <script type="text/javascript">
+      function change(str){
+        while(str.substr(0,1) == ' ' || str.substr(0,1) == '　'){
+          str = str.substr(1);
+        }
+        return str;
+      }
+      function check(frm){
+        var text = change(frm.elements['memo'].value);
+        if(text==""){
+          alert("予定が入力されていません。");
+          return false;
+        }else{
+          frm.elements['memo'].value = text;
+          return true;
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="container">
@@ -52,24 +64,6 @@
         <input type="text"id="memo" name="memo" value="" />
         <input type="submit" name="add" id="add" value="追加" />
       </form>
-      <script type="text/javascript">
-        function change(str){
-          while(str.substr(0,1) == ' ' || str.substr(0,1) == '　'){
-            str = str.substr(1);
-          }
-          return str;
-        }
-        function check(frm){
-          var text = change(frm.elements['memo'].value);
-          if(text==""){
-            alert("予定が入力されていません。");
-            return false;
-          }else{
-            frm.elements['memo'].value = text;
-            return true;
-          }
-        }
-      </script>
     </div>
     <hr>
     <?php
